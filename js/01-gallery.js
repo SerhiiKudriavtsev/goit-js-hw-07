@@ -20,31 +20,27 @@ const items = galleryItems.map(({ preview, original, description }) => {
 </div>
   `}).join('');
   
-gallery.insertAdjacentHTML("afterbegin", items);
+  gallery.insertAdjacentHTML("afterbegin", items);
+  
+  let openInstance;
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && openInstance) {
+    openInstance.close();
+  }  
+});
 
-gallery.addEventListener('click', onImageClick)
-
-function onImageClick(event) {
+const instance = document.querySelector('.gallery').onclick = (event) => {
   if (!event.target.classList.contains('gallery__image')) {
     return;
   }
-  const instance = basicLightbox.create(`
-      <img src="${itemOriginal()}">
-  `)
-  instance.show()
-  
-  function itemOriginal(){
-    for (const item of galleryItems) {
-      if (item.description === event.target.alt) {
-        return item.original;
-      }
+  basicLightbox.create(`
+      <img src="${event.target.dataset.source}">
+    `, {
+    onShow: (instance) => {
+      openInstance = instance;
+    },
+    onClose: () => {
+      openInstance = null;
     }
-  } 
-  addEventListener('keydown', closeModal)
-  function closeModal(evt) {
-    if (evt.keyCode !== 27) {
-      return
-    }
-    instance.close()
-    }
+  }).show();
 }
