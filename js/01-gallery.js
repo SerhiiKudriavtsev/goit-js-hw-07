@@ -22,13 +22,13 @@ const items = galleryItems.map(({ preview, original, description }) => {
   
   gallery.insertAdjacentHTML("afterbegin", items);
   
-  let openInstance;
-window.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && openInstance) {
-    openInstance.close();
-  }  
-});
+function keyDown(event) {
+    if (event.key === 'Escape') {
+          openInstance.close();
+        }  
+};
 
+let openInstance;
 const instance = document.querySelector('.gallery').onclick = (event) => {
   if (!event.target.classList.contains('gallery__image')) {
     return;
@@ -36,11 +36,12 @@ const instance = document.querySelector('.gallery').onclick = (event) => {
   basicLightbox.create(`
       <img src="${event.target.dataset.source}">
     `, {
-    onShow: (instance) => {
+    onShow: (instance) => {        
+      window.addEventListener('keydown', keyDown);
       openInstance = instance;
     },
     onClose: () => {
-      openInstance = null;
+      window.removeEventListener;
     }
   }).show();
 }
